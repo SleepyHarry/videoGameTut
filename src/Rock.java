@@ -10,9 +10,9 @@ public class Rock extends GameObject{
 	
 	double maxSpeed = 5;	//not actually a max speed, max speed is sqrt(50)
 
-	public Rock(int xLim, int yLim, double size){//, Point[] arrPoly) {
+	public Rock(int xLim, int yLim, double size, GameBoard game){//, Point[] arrPoly) {
 		
-		super(arrBasePolyX, arrBasePolyY, size, new Point(xLim, yLim));
+		super(arrBasePolyX, arrBasePolyY, size, game);
 		
 		Rectangle bBox = this.getBounds();
 //		System.out.println(bBox);
@@ -42,8 +42,8 @@ public class Rock extends GameObject{
 		//also gives them appropriate velocities
 		
 		Rock[] splits = {
-				new Rock(this.limit.x, this.limit.y, this.size/2),
-				new Rock(this.limit.x, this.limit.y, this.size/2)
+				new Rock(this.limit.x, this.limit.y, this.size/2, this.game),
+				new Rock(this.limit.x, this.limit.y, this.size/2, this.game)
 		};
 		
 		Point oldPos = this.getPos();

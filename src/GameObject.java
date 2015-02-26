@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public abstract class GameObject extends Polygon{
 	
+	final GameBoard game;
 	final Point limit;
 	
 	boolean collidable = true;
@@ -27,7 +28,7 @@ public abstract class GameObject extends Polygon{
 	
 	Color color = Color.WHITE;
 
-	public GameObject(int[] arrPolyX, int[] arrPolyY, double size, Point limit) {
+	public GameObject(int[] arrPolyX, int[] arrPolyY, double size, GameBoard game) {
 		
 //		super(arrSPolyX, arrSPolyY, length);
 		this.size = size;
@@ -36,7 +37,8 @@ public abstract class GameObject extends Polygon{
 			this.addPoint((int)(arrPolyX[i]*size), (int)(arrPolyY[i]*size));
 		}
 		
-		this.limit = limit;
+		this.game = game;
+		this.limit = new Point(game.width, game.height);
 	}
 	
 	public Color getColor() {
@@ -194,31 +196,36 @@ public abstract class GameObject extends Polygon{
 		
 		return collisions.toArray(new GameObject[collisions.size()]);
 	}
+	
+	public GameObject[] checkCollisions(ArrayList<GameObject> objs){
+		//overload to make calls to checkCollisions more readable
+		return this.checkCollisions(objs.toArray(new GameObject[objs.size()]));
+	}
 
-	public void handleKeyPress(ArrayList<Integer> keyPressStack){
+	public void handleKeyPress(){
 		//decides what to do when given input from keyboard keys pressed
 		//keysDown is currently only {w, a, s, d} bools
+		
+		//checks this.game.keysHeld
 		
 		//OVERRIDE THIS IN SUBCLASSES
 	}
 	
-	public void handleKeysHeld(ArrayList<Integer> keysDown){
+	public void handleKeysHeld(){
 		//decides what to do when given input from keyboard keys held down
 		//keysDown is currently only {w, a, s, d} bools
+		
+		//checks this.game.keysDown
 		
 		//OVERRIDE THIS IN SUBCLASSES
 	}
 	
 	public void tick(){
 		
-		this.move();
-	}
-	
-	public void tick(ArrayList<Integer> keysDown, ArrayList<Integer> keyPressStack){
+		this.handleKeyPress();
+		this.handleKeysHeld();
 		
-		this.handleKeyPress(keyPressStack);
-		this.handleKeysHeld(keysDown);
-		this.tick();
+		this.move();
 	}
 	
 	public void draw(Graphics2D g2){

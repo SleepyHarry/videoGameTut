@@ -28,7 +28,7 @@ public class Lesson50 extends JFrame{
 		this.setTitle("Java Asteroids");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		DrawingPanel panel = new DrawingPanel();
+		GameBoard panel = new GameBoard();
 		
 		this.add(panel, BorderLayout.CENTER);
 		
@@ -82,7 +82,7 @@ class RepaintTheBoard implements Runnable{
 	}
 }
 
-class DrawingPanel extends JComponent {
+class GameBoard extends JComponent {
 	
 	int width = Lesson50.width;
 	int height = Lesson50.height;
@@ -93,20 +93,22 @@ class DrawingPanel extends JComponent {
 	
 	public SpaceShip player;
 	
+	ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	
 	ArrayList<Integer> keysDown = new ArrayList<Integer>();				//keys removed when released
 	ArrayList<Integer> keyPressStack = new ArrayList<Integer>();		//keys removed when we've acted on it
 	
-	public DrawingPanel(){
+	public GameBoard(){
 		
 //			this.setDoubleBuffered(true);
 		
-		player = new SpaceShip(width, height, 1);
+		player = new SpaceShip(width, height, 1, this);
 		
 		for(int i=0; i<numRocks; i++){
 			Rock newRock;
 			
 			do{
-				newRock = new Rock(width, height, Math.random()+0.5);
+				newRock = new Rock(width, height, Math.random()+0.5, this);
 			}while(newRock.checkCollisions(rocks.toArray(new GameObject[rocks.size()])).length > 0);	//make sure we haven't made a rock inside an existing one
 			
 			rocks.add(newRock);
@@ -158,7 +160,7 @@ class DrawingPanel extends JComponent {
 //			g2.draw(rock.getBounds());
 		}
 		
-		player.tick(keysDown, keyPressStack);
+		player.tick();
 		
 		GameObject[] pCollisions = player.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 		if(pCollisions.length > 0){

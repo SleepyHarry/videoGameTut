@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 public class SpaceShip extends GameObject{
 	
@@ -14,12 +13,14 @@ public class SpaceShip extends GameObject{
 	double dTheta = 0.1;
 	double dThetaMax;
 	
-	ArrayList<Bullet> bullets;
+//	ArrayList<Bullet> bullets;
+	
+	//TODO: Weapon class, which will have things like bulletSpeed set in it
 	double bulletSpeed = 10;
 	
-	public SpaceShip(int xLim, int yLim, double size){//, Point[] arrPoly) {
+	public SpaceShip(int xLim, int yLim, double size, GameBoard game){//, Point[] arrPoly) {
 		
-		super(arrBasePolyX, arrBasePolyY, size, new Point(xLim, yLim));
+		super(arrBasePolyX, arrBasePolyY, size, game);
 		
 		//move ourselves to the centre of the screen
 //		this.translate(this.limit.x/2, this.limit.y/2);
@@ -27,7 +28,7 @@ public class SpaceShip extends GameObject{
 		
 		this.setCollidable(false);
 		
-		this.bullets = new ArrayList<Bullet>();
+//		this.bullets = new ArrayList<Bullet>();
 	}
 	
 	private Bullet fireBullet(){
@@ -40,15 +41,15 @@ public class SpaceShip extends GameObject{
 		newBullet.setColor(newBullet.isCollidable()?Color.WHITE:Color.GREEN);
 		
 		//TODO: Check all bullets for hits when we tick, remove any that do
-		this.bullets.add(newBullet);
+//		this.game.bullets.add(newBullet);				//We shouldn't be responsible for adding the bullet, which is why we return it
 		
 		return newBullet;
 	}
 	
-	public void handleKeyPress(ArrayList<Integer> keyPressStack){
+	public void handleKeyPress(){
 		//decides what to do when given input from keyboard keys pressed
 		
-		for(int k : keyPressStack){
+		for(int k : this.game.keyPressStack){
 			//It's called a stack, but really we just iterate through it in order, then clear it
 			switch(k){
 			case KeyEvent.VK_BACK_QUOTE:
@@ -60,30 +61,33 @@ public class SpaceShip extends GameObject{
 			}
 		}
 		
-		//does this propogate? Yes
-		keyPressStack.clear();
+		this.game.keyPressStack.clear();
 	}
 	
-	public void handleKeysHeld(ArrayList<Integer> keysDown){
+	public void handleKeysHeld(){
 		//decides what to do when given input from keyboard keys held down
 		
 		//movement keys
-		if(keysDown.contains(KeyEvent.VK_W)){
-			this.addRelativeVelocity( this.acceleration,  0);
-		}
-		
-		if(keysDown.contains(KeyEvent.VK_A)){
-			this.setTheta(this.getTheta()-dTheta);
-//			this.setOmega(this.getOmega()-dOmega);
-		}
-		
-		if(keysDown.contains(KeyEvent.VK_S)){
-			this.addRelativeVelocity(-this.acceleration,  0);
-		}
-		
-		if(keysDown.contains(KeyEvent.VK_D)){
-//			this.setTheta(this.getTheta()+dTheta);
-			this.setOmega(dTheta);
+		for(int keyCode : this.game.keysDown){
+			switch(keyCode){
+			case KeyEvent.VK_W:
+				this.addRelativeVelocity( this.acceleration,  0);
+				break;
+				
+			case KeyEvent.VK_A:
+				this.setTheta(this.getTheta()-dTheta);
+	//			this.setOmega(this.getOmega()-dOmega);
+				break;
+				
+			case KeyEvent.VK_S:
+				this.addRelativeVelocity(-this.acceleration,  0);
+				break;
+				
+			case KeyEvent.VK_D:
+	//			this.setTheta(this.getTheta()+dTheta);
+				this.setOmega(dTheta);
+				break;
+			}
 		}
 	}
 	
@@ -91,26 +95,28 @@ public class SpaceShip extends GameObject{
 		
 		super.draw(g2);
 		
-		for(Bullet bullet : this.bullets){
-			bullet.tick();
-			Point bPos = bullet.getPos();
-			
-			if(bPos.x <= 0 || this.limit.x <= bPos.x ||
-			   bPos.y <= 0 || this.limit.y <= bPos.y){
-//				this.bullets.remove(bullet);
-				bullet.setAlive(false);
-//				System.out.println("bullet is kil");
-			}else if(bullet.isAlive()){
-				bullet.draw(g2);
-			}
-		}
-		
-		//clean-up
-		for(Object bullet : this.bullets.toArray()){
-			if(!((Bullet)bullet).isAlive()){
-				bullets.remove(((Bullet)bullet));
-			}
-		}
+//		for(Bullet bullet : this.game.bullets){
+//			bullet.tick();
+//			Point bPos = bullet.getPos();
+//			
+//			if(bPos.x <= 0 || this.limit.x <= bPos.x ||
+//			   bPos.y <= 0 || this.limit.y <= bPos.y){
+////				this.bullets.remove(bullet);
+//				bullet.setAlive(false);
+////				System.out.println("bullet is kil");
+//			}else if(bullet.isAlive()){
+//				bullet.draw(g2);
+//			}
+//			
+////			GameObject[] hits = bullet.checkHits();
+//		}
+//		
+//		//clean-up
+//		for(Object bullet : this.game.bullets.toArray()){
+//			if(!((Bullet)bullet).isAlive()){
+//				this.game.bullets.remove(((Bullet)bullet));
+//			}
+//		}
 	}
 	
 	public void tick(){
