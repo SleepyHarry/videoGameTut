@@ -88,7 +88,7 @@ class GameBoard extends JComponent {
 	int width = Lesson50.width;
 	int height = Lesson50.height;
 	
-	static int numRocks = 5;
+	static int numRocks = 50;
 	
 	public ArrayList<Rock> rocks = new ArrayList<Rock>();
 	

@@ -17,7 +17,7 @@ public class SpaceShip extends GameObject{
 	//TODO: Weapon class, which will have things like bulletSpeed set in it
 	double bulletSpeed = 10;
 	
-	private int explosionFragments = 10;		//How many bullets are generated when this ship explodes
+	private int explosionFragments = 50;		//How many bullets are generated when this ship explodes
 	
 	public SpaceShip(int xLim, int yLim, double size, GameBoard game){//, Point[] arrPoly) {
 		
