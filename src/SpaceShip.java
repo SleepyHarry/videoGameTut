@@ -17,6 +17,8 @@ public class SpaceShip extends GameObject{
 	//TODO: Weapon class, which will have things like bulletSpeed set in it
 	double bulletSpeed = 10;
 	
+	private int explosionFragments = 10;		//How many bullets are generated when this ship explodes
+	
 	public SpaceShip(int xLim, int yLim, double size, GameBoard game){//, Point[] arrPoly) {
 		
 		super(arrBasePolyX, arrBasePolyY, size, game);
@@ -46,6 +48,14 @@ public class SpaceShip extends GameObject{
 		//return newBullet;
 	}
 	
+	public int getExplosionFragments() {
+		return explosionFragments;
+	}
+
+	public void setExplosionFragments(int explosionFragments) {
+		this.explosionFragments = explosionFragments;
+	}
+
 	public void handleKeyPress(){
 		//decides what to do when given input from keyboard keys pressed
 		

@@ -207,43 +207,61 @@ class GameBoard extends JComponent {
 		
 		GameObject[] pCollisions = player.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 		if(pCollisions.length > 0){
-			player.setColor(Color.RED);
+//			player.setColor(Color.RED);
+			//player is kil
+			player.setAlive(false);
+			
+			int n = player.getExplosionFragments();
+			double deltaTheta = (Math.PI*2)/n;		//each bullet is evenly distributed
+			
+			Point startPos = player.getPos();
+			
+			double explosionForce = 4;				//should this be part of SpaceShip too?
+			
+			for(int i=0; i<n; i++){
+				double[] newVelocity = {Math.cos(deltaTheta*i)*explosionForce, Math.sin(deltaTheta*i)*explosionForce};
+				bullets.add(new Bullet(startPos, newVelocity));
+			}
 		}else{
 			player.setColor(player.isCollidable()?Color.WHITE:Color.GREEN);
 		}
 		
-		for(GameObject obj : pCollisions){
-			double[] temp = player.getVelocity();
-			player.setVelocity(obj.getVelocity());
-			obj.setVelocity(temp);
-			
-			player.setOmega(-obj.getOmega());
-//			obj.setOmega(-player.getOmega());
-			
-			if(obj.getClass() == Rock.class){/*
-				rocks.remove(obj);
-			
-				Rock[] splits = ((Rock) obj).split();
-				for(Rock split : splits){
-	//				System.out.println(split.size+"\t"+Rock.sizeThreshold);
-					//if(!split.getBounds().isEmpty()){
-					if(!(split.size < Rock.sizeThreshold)){
-						rocks.add(split);
-					}
-				}
-			
-				//move the rocks until they're not stuck on each other any more
-				while(player.checkCollisions(splits).length>0){
-					//checks collisions against both fragments simultaneously
-					player.tick();
-					
-					for(Rock split : splits){
-						split.tick();
-					}
-				}
-			*/}
-		}
+//		for(GameObject obj : pCollisions){
+//			double[] temp = player.getVelocity();
+//			player.setVelocity(obj.getVelocity());
+//			obj.setVelocity(temp);
+//			
+//			player.setOmega(-obj.getOmega());
+////			obj.setOmega(-player.getOmega());
+//			
+//			if(obj.getClass() == Rock.class){/*
+//				rocks.remove(obj);
+//			
+//				Rock[] splits = ((Rock) obj).split();
+//				for(Rock split : splits){
+//	//				System.out.println(split.size+"\t"+Rock.sizeThreshold);
+//					//if(!split.getBounds().isEmpty()){
+//					if(!(split.size < Rock.sizeThreshold)){
+//						rocks.add(split);
+//					}
+//				}
+//			
+//				//move the rocks until they're not stuck on each other any more
+//				while(player.checkCollisions(splits).length>0){
+//					//checks collisions against both fragments simultaneously
+//					player.tick();
+//					
+//					for(Rock split : splits){
+//						split.tick();
+//					}
+//				}
+//			*/}
+//		}
 		
+		if(!player.isAlive()){
+			//player is kil, make a new one
+			player = new SpaceShip(width, height, 1, this);
+		}
 		player.draw(g2);
 		
 		//clean-up

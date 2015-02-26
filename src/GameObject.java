@@ -27,6 +27,8 @@ public abstract class GameObject extends Polygon{
 	public static int[] arrBasePolyY;
 	
 	Color color = Color.WHITE;
+	
+	boolean alive = true;
 
 	public GameObject(int[] arrPolyX, int[] arrPolyY, double size, GameBoard game) {
 		
@@ -41,6 +43,14 @@ public abstract class GameObject extends Polygon{
 		this.limit = new Point(game.width, game.height);
 	}
 	
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
+
 	public Color getColor() {
 		return color;
 	}
