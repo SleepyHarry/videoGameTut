@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -127,12 +128,56 @@ class GameBoard extends JComponent {
 		
 		g2.setPaint(Color.WHITE);
 		
+		//tick everything before checking for collisions or whatever else
 		for(Rock rock : rocks){
 			rock.tick();
 		}
 		
-		//move them all first, then do collision detection
-		//TODO: Is there a way to do this without a double loop?
+		player.tick();
+		
+		for(Bullet bullet : bullets){
+			bullet.tick();
+		}
+		
+		
+		//Now check for collisions and other interactions
+		for(Bullet bullet : bullets){
+			Point bPos = bullet.getPos();
+			
+			if(bPos.x <= 0 || this.width <= bPos.x ||
+			   bPos.y <= 0 || this.height <= bPos.y){
+				bullet.setAlive(false);
+				continue;
+			}
+			
+			//See if we've hit a rock
+			GameObject[] hits = bullet.checkHits(rocks.toArray(new GameObject[rocks.size()]));
+			for(GameObject hit : hits){
+				if(bullet.isAlive()){
+					//we only get here if we've hit something
+					bullet.setAlive(false);
+				}
+				
+//				hit.setColor(Color.RED);
+				
+				//hit is definitely a Rock, so casting to Rock is not a problem here
+				rocks.remove(hit);
+				
+				Rock[] splits = ((Rock) hit).split();
+				for(Rock split : splits){
+	//				System.out.println(split.size+"\t"+Rock.sizeThreshold);
+					//if(!split.getBounds().isEmpty()){
+					if(!(split.size < Rock.sizeThreshold)){
+						rocks.add(split);
+					}
+				}
+			}
+			
+			if(bullet.isAlive()){
+				bullet.draw(g2);
+			}
+		}
+
 		for(Rock rock : rocks){
 			GameObject[] collisions = rock.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 			
@@ -160,8 +205,6 @@ class GameBoard extends JComponent {
 //			g2.draw(rock.getBounds());
 		}
 		
-		player.tick();
-		
 		GameObject[] pCollisions = player.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 		if(pCollisions.length > 0){
 			player.setColor(Color.RED);
@@ -177,29 +220,38 @@ class GameBoard extends JComponent {
 			player.setOmega(-obj.getOmega());
 //			obj.setOmega(-player.getOmega());
 			
-			rocks.remove(obj);
+			if(obj.getClass() == Rock.class){/*
+				rocks.remove(obj);
 			
-			Rock[] splits = ((Rock) obj).split();
-			for(Rock split : splits){
-//				System.out.println(split.size+"\t"+Rock.sizeThreshold);
-				//if(!split.getBounds().isEmpty()){
-				if(!(split.size < Rock.sizeThreshold)){
-					rocks.add(split);
-				}
-			}
-			
-			//move the rocks until they're not stuck on each other any more
-			while(player.checkCollisions(splits).length>0){
-				//checks collisions against both fragments simultaneously
-				player.tick();
-				
+				Rock[] splits = ((Rock) obj).split();
 				for(Rock split : splits){
-					split.tick();
+	//				System.out.println(split.size+"\t"+Rock.sizeThreshold);
+					//if(!split.getBounds().isEmpty()){
+					if(!(split.size < Rock.sizeThreshold)){
+						rocks.add(split);
+					}
 				}
-			}
+			
+				//move the rocks until they're not stuck on each other any more
+				while(player.checkCollisions(splits).length>0){
+					//checks collisions against both fragments simultaneously
+					player.tick();
+					
+					for(Rock split : splits){
+						split.tick();
+					}
+				}
+			*/}
 		}
 		
 		player.draw(g2);
+		
+		//clean-up
+		for(Bullet bullet : bullets.toArray(new Bullet[bullets.size()])){		//convoluted, but avoids concurrency errors
+			if(!bullet.isAlive()){
+				bullets.remove(bullet);
+			}
+		}
 		
 //		rocks.get(0).checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 	}

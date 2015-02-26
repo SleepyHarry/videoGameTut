@@ -197,6 +197,7 @@ public abstract class GameObject extends Polygon{
 		return collisions.toArray(new GameObject[collisions.size()]);
 	}
 	
+	//TODO: Make this work with ArrayList<X>, where X extends GameObject
 	public GameObject[] checkCollisions(ArrayList<GameObject> objs){
 		//overload to make calls to checkCollisions more readable
 		return this.checkCollisions(objs.toArray(new GameObject[objs.size()]));

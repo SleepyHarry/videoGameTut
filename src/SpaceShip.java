@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 public class SpaceShip extends GameObject{
@@ -31,9 +30,9 @@ public class SpaceShip extends GameObject{
 //		this.bullets = new ArrayList<Bullet>();
 	}
 	
-	private Bullet fireBullet(){
+	private void fireBullet(){
 		//fires a bullet out of the nose of the ship
-		//returns the fired Bullet for convenience
+//		//returns the fired Bullet for convenience
 		double[] bulletVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
 		
 		Bullet newBullet = new Bullet(this.getPos(), bulletVelocity);
@@ -41,9 +40,9 @@ public class SpaceShip extends GameObject{
 		newBullet.setColor(newBullet.isCollidable()?Color.WHITE:Color.GREEN);
 		
 		//TODO: Check all bullets for hits when we tick, remove any that do
-//		this.game.bullets.add(newBullet);				//We shouldn't be responsible for adding the bullet, which is why we return it
+		this.game.bullets.add(newBullet);
 		
-		return newBullet;
+		//return newBullet;
 	}
 	
 	public void handleKeyPress(){
