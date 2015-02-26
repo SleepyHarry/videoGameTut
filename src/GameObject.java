@@ -59,33 +59,6 @@ public abstract class GameObject extends Polygon{
 		return new Point((int)this.actualPos[0], (int)this.actualPos[1]);
 	}
 
-	/*public Rectangle getBounds(){
-		//same functionality a Polygon.getBounds, except this respects rotation
-		AffineTransform aT = new AffineTransform();
-		
-		Rectangle r = super.getBounds();
-		
-		aT.translate(r.getCenterX(), r.getCenterY());
-		aT.rotate(this.theta);
-		aT.translate(-r.getCenterX(), -r.getCenterY());
-		
-		double[] srcPts = new double[this.npoints*2];
-		for(int i=0; i<this.npoints; i++){
-			srcPts[i*2] = (double)this.xpoints[i];
-			srcPts[i*2 + 1] = (double)this.ypoints[i];
-		}
-		double[] dstPts = new double[srcPts.length];
-		aT.transform(srcPts, 0, dstPts, 0, this.npoints);
-		
-		Polygon newPoly = new Polygon();
-		for(int i=0; i<this.npoints; i++){
-			newPoly.addPoint((int)dstPts[i*2], (int)dstPts[i*2 +1]);
-		}
-		
-//		return aT.createTransformedShape(r).getBounds();
-		return newPoly.getBounds();
-	}*/
-	
 	public double[] getVelocity() {
 		return velocity;
 	}

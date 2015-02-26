@@ -1,0 +1,9 @@
+Bullet : class
+Polygon : superclass
+
+- length : double
+/ xpoints : int[2]
+/ ypoints : int[2]
+
++ checkHits(objs : GameObject[]) : GameObject[]
++ draw(g2 : Graphics2d) : void

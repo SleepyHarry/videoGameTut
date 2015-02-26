@@ -1,16 +1,20 @@
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class SpaceShip extends GameObject{
 	
-	public static int[] arrBasePolyX = {-14, 13, -14, -6};
-	public static int[] arrBasePolyY = {-15, 0, 15, 0, -15};
+	static int[] arrBasePolyX = {-14, 13, -14, -6};
+	static int[] arrBasePolyY = {-15, 0, 15, 0, -15};
 	
 	double acceleration = 0.1;
 	double dOmega = 0.0025;
 	double dTheta = 0.1;
 	double dThetaMax;
+	
+	ArrayList<Bullet> bullets;
+	double bulletSpeed = 10;
 	
 	public SpaceShip(int xLim, int yLim, double size){//, Point[] arrPoly) {
 		
@@ -21,6 +25,21 @@ public class SpaceShip extends GameObject{
 		this.setPos(this.limit.x/2, this.limit.y/2);
 		
 		this.setCollidable(false);
+		
+		this.bullets = new ArrayList<Bullet>();
+	}
+	
+	private Bullet fireBullet(){
+		//fires a bullet out of the nose of the ship
+		//returns the fired Bullet for convenience
+		double[] bulletVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
+		
+		Bullet newBullet = new Bullet(this.getPos(), bulletVelocity);
+		
+		//TODO: Check all bullets for hits when we tick, remove any that do
+		this.bullets.add(newBullet);
+		
+		return newBullet;
 	}
 	
 	public void handleKeyPress(ArrayList<Integer> keyPressStack){
@@ -31,6 +50,10 @@ public class SpaceShip extends GameObject{
 			switch(k){
 			case KeyEvent.VK_BACK_QUOTE:
 				this.setCollidable(!this.isCollidable());
+				break;
+			case KeyEvent.VK_SPACE:
+				this.fireBullet();
+				break;
 			}
 		}
 		
@@ -41,6 +64,7 @@ public class SpaceShip extends GameObject{
 	public void handleKeysHeld(ArrayList<Integer> keysDown){
 		//decides what to do when given input from keyboard keys held down
 		
+		//movement keys
 		if(keysDown.contains(KeyEvent.VK_W)){
 			this.addRelativeVelocity( this.acceleration,  0);
 		}
@@ -57,6 +81,32 @@ public class SpaceShip extends GameObject{
 		if(keysDown.contains(KeyEvent.VK_D)){
 //			this.setTheta(this.getTheta()+dTheta);
 			this.setOmega(dTheta);
+		}
+	}
+	
+	public void draw(Graphics2D g2){
+		
+		super.draw(g2);
+		
+		for(Bullet bullet : this.bullets){
+			bullet.tick();
+			Point bPos = bullet.getPos();
+			
+			if(bPos.x <= 0 || this.limit.x <= bPos.x ||
+			   bPos.y <= 0 || this.limit.y <= bPos.y){
+//				this.bullets.remove(bullet);
+				bullet.setAlive(false);
+				System.out.println("bullet is kil");
+			}else if(bullet.isAlive()){
+				bullet.draw(g2);
+			}
+		}
+		
+		//clean-up
+		for(Object bullet : this.bullets.toArray()){
+			if(!((Bullet)bullet).isAlive()){
+				bullets.remove(((Bullet)bullet));
+			}
 		}
 	}
 	
