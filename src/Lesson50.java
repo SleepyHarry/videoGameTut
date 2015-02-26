@@ -162,9 +162,9 @@ class DrawingPanel extends JComponent {
 		
 		GameObject[] pCollisions = player.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 		if(pCollisions.length > 0){
-			g2.setPaint(Color.RED);
-		}else if(!player.isCollidable()){
-			g2.setPaint(Color.GREEN);
+			player.setColor(Color.RED);
+		}else{
+			player.setColor(player.isCollidable()?Color.WHITE:Color.GREEN);
 		}
 		
 		for(GameObject obj : pCollisions){

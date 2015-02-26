@@ -1,6 +1,8 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.ArrayList;
 
 
 public class Bullet extends Polygon{
@@ -12,6 +14,10 @@ public class Bullet extends Polygon{
 	
 	boolean alive = true;
 	
+	boolean collidable = true;
+	
+	Color color = Color.WHITE;
+
 	public Bullet(Point startPos, double[] velocity){
 		
 		this.pos[0] = startPos.x;
@@ -31,7 +37,21 @@ public class Bullet extends Polygon{
 	}
 	
 	public GameObject[] checkHits(GameObject[] objs){
-		return null;
+		
+		if(!this.isCollidable() || !this.isAlive()){
+			return new GameObject[0];
+		}
+		
+		ArrayList<GameObject> hits = new ArrayList<GameObject>();
+		
+		for(GameObject obj : objs){
+			if(this.intersects(obj.getBounds2D())){
+				System.out.println("HIT");
+				hits.add(obj);
+			}
+		}
+		
+		return hits.toArray(new GameObject[hits.size()]);
 	}
 	
 	public boolean isAlive() {
@@ -41,16 +61,37 @@ public class Bullet extends Polygon{
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}
+	
+	public boolean isCollidable() {
+		return collidable;
+	}
+
+	public void setCollidable(boolean collidable) {
+		this.collidable = collidable;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
 
 	public void draw(Graphics2D g2){
-		System.out.printf("pos: (%d, %d)\tvelocity: (%f, %f)\txpoints: [%d, %d]\typoints: [%d, %d]\n",
-				this.getPos().x, this.getPos().y,
-				velocity[0], velocity[1],
-				xpoints[0], xpoints[1],                               
-				ypoints[0], ypoints[1]                                
-						);                                            
+//		System.out.printf("pos: (%d, %d)\tvelocity: (%f, %f)\txpoints: [%d, %d]\typoints: [%d, %d]\n",
+//				this.getPos().x, this.getPos().y,
+//				velocity[0], velocity[1],
+//				xpoints[0], xpoints[1],                               
+//				ypoints[0], ypoints[1]                                
+//						);                                            
+		
+		Color oldColor = g2.getColor();
+		g2.setColor(this.getColor());
 		                                                              
-		g2.draw(this);                                                
+		g2.draw(this);
+		
+		g2.setColor(oldColor);
 	}                                                                 
 	                                                                  
 	public Point getPos(){                                            

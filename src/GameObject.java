@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -23,6 +24,8 @@ public abstract class GameObject extends Polygon{
 	
 	public static int[] arrBasePolyX;
 	public static int[] arrBasePolyY;
+	
+	Color color = Color.WHITE;
 
 	public GameObject(int[] arrPolyX, int[] arrPolyY, double size, Point limit) {
 		
@@ -36,6 +39,14 @@ public abstract class GameObject extends Polygon{
 		this.limit = limit;
 	}
 	
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 	public boolean isCollidable() {
 		return collidable;
 	}
@@ -222,8 +233,12 @@ public abstract class GameObject extends Polygon{
 		g2.rotate(this.theta);
 		g2.translate(-centerX, -centerY);
 		
+		Color oldColor = g2.getColor();
+		g2.setColor(this.getColor());
+		
 		g2.draw(this);
 		
 		g2.setTransform(oldT);
+		g2.setColor(oldColor);
 	}
 }

@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -35,6 +36,8 @@ public class SpaceShip extends GameObject{
 		double[] bulletVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
 		
 		Bullet newBullet = new Bullet(this.getPos(), bulletVelocity);
+		newBullet.setCollidable(this.isCollidable());
+		newBullet.setColor(newBullet.isCollidable()?Color.WHITE:Color.GREEN);
 		
 		//TODO: Check all bullets for hits when we tick, remove any that do
 		this.bullets.add(newBullet);
@@ -96,7 +99,7 @@ public class SpaceShip extends GameObject{
 			   bPos.y <= 0 || this.limit.y <= bPos.y){
 //				this.bullets.remove(bullet);
 				bullet.setAlive(false);
-				System.out.println("bullet is kil");
+//				System.out.println("bullet is kil");
 			}else if(bullet.isAlive()){
 				bullet.draw(g2);
 			}
