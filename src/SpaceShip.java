@@ -33,9 +33,10 @@ public class SpaceShip extends GameObject{
 	private void fireBullet(){
 		//fires a bullet out of the nose of the ship
 //		//returns the fired Bullet for convenience
-		double[] bulletVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
+		double[] bulletRelativeVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
+		double[] bulletAbsoluteVelocity = {bulletRelativeVelocity[0]+this.velocity[0], bulletRelativeVelocity[1]+this.velocity[1]};
 		
-		Bullet newBullet = new Bullet(this.getPos(), bulletVelocity);
+		Bullet newBullet = new Bullet(this.getPos(), bulletAbsoluteVelocity);
 		newBullet.setCollidable(this.isCollidable());
 		newBullet.setColor(newBullet.isCollidable()?Color.WHITE:Color.GREEN);
 		

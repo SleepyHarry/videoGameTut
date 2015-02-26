@@ -253,6 +253,6 @@ class GameBoard extends JComponent {
 			}
 		}
 		
-//		rocks.get(0).checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
+//		System.out.println(bullets.size());
 	}
 }

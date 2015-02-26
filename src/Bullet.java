@@ -46,7 +46,7 @@ public class Bullet extends Polygon{
 		
 		for(GameObject obj : objs){
 			if(this.intersects(obj.getBounds2D())){
-				System.out.println("HIT");
+//				System.out.println("HIT");
 				hits.add(obj);
 			}
 		}
