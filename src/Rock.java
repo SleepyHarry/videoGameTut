@@ -3,7 +3,7 @@ import java.awt.Rectangle;
 
 public class Rock extends GameObject{
 	
-	public static double sizeThreshold = 1/8.0;
+	public static double sizeThreshold = 1/4.0;
 	
 	public static int[] arrBasePolyX = {-8,-1,8,16,9,18,8,-4,-10,-17,-13,-17};//,10};
 	public static int[] arrBasePolyY = {-15,-10,-14,-7,-2,5,16,13,16,7,1,-8};//,0};

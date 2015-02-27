@@ -10,7 +10,9 @@ public class Bullet extends Polygon{
 	final static double length = 5;
 	
 	double[] pos = {0, 0};				//Position of the head of the bullet
-	double[] velocity;
+	double[] velocity = new double[2];
+	double[] normalVelocity = new double[2];
+	double	 speed;
 	
 	boolean alive = true;
 	
@@ -25,15 +27,13 @@ public class Bullet extends Polygon{
 		
 		this.velocity = velocity;
 		
-		double velocityVectorLength = Point.distance(0, 0, velocity[0], velocity[1]);
-		double[] normalVelocity = {
-				velocity[0] / velocityVectorLength,
-				velocity[1] / velocityVectorLength
-		};
+		this.speed = Point.distance(0, 0, velocity[0], velocity[1]);
+		this.normalVelocity[0] = velocity[0] / this.speed;
+		this.normalVelocity[1] = velocity[1] / this.speed;
 		
 		//create ourselves with the tail point behind us in the direction of our initial velocity
 		this.addPoint(startPos.x, startPos.y);
-		this.addPoint((int) (startPos.x - normalVelocity[0]*Bullet.length), (int) (startPos.y - normalVelocity[1]*Bullet.length));
+		this.addPoint((int) (startPos.x - this.normalVelocity[0]*Bullet.length), (int) (startPos.y - this.normalVelocity[1]*Bullet.length));
 	}
 	
 	public GameObject[] checkHits(GameObject[] objs){
@@ -42,10 +42,16 @@ public class Bullet extends Polygon{
 			return new GameObject[0];
 		}
 		
+		//get everything we've passed through since the last tick
+		int[] traceXpoints = {this.xpoints[0], (int) (this.xpoints[0]-this.normalVelocity[0]*this.speed)};
+		int[] traceYpoints = {this.ypoints[0], (int) (this.ypoints[0]-this.normalVelocity[1]*this.speed)};
+		
+		Polygon bulletTrace = new Polygon(traceXpoints, traceYpoints, this.npoints);
+		
 		ArrayList<GameObject> hits = new ArrayList<GameObject>();
 		
 		for(GameObject obj : objs){
-			if(this.intersects(obj.getBounds2D())){
+			if(bulletTrace.intersects(obj.getBounds2D())){
 //				System.out.println("HIT");
 				hits.add(obj);
 			}

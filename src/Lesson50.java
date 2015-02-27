@@ -43,6 +43,11 @@ public class Lesson50 extends JFrame{
 				}
 				
 				panel.keyPressStack.add(e.getKeyCode());
+				
+				if(e.getKeyCode() == KeyEvent.VK_Q){
+//					panel.reloadPlayer();
+					panel.reloadRocks();
+				}
 			}
 
 			@Override
@@ -88,7 +93,7 @@ class GameBoard extends JComponent {
 	int width = Lesson50.width;
 	int height = Lesson50.height;
 	
-	static int numRocks = 50;
+	int numRocks = 50;
 	
 	public ArrayList<Rock> rocks = new ArrayList<Rock>();
 	
@@ -103,8 +108,30 @@ class GameBoard extends JComponent {
 		
 //			this.setDoubleBuffered(true);
 		
-		player = new SpaceShip(width, height, 1, this);
+		this.reloadPlayer();
 		
+		this.reloadRocks();
+	}
+	
+	public void reloadPlayer(){
+		
+		this.player = new SpaceShip(this.width, this.height, 1, this);
+	}
+	
+	public void reloadRocks(){
+		this.rocks.clear();
+		
+		for(int i=0; i<this.numRocks; i++){
+			Rock newRock;
+			
+			do{
+				newRock = new Rock(width, height, Math.random()+0.5, this);
+			}while(newRock.checkCollisions(rocks.toArray(new GameObject[rocks.size()])).length > 0);	//make sure we haven't made a rock inside an existing one
+			
+			rocks.add(newRock);
+		}
+	}
+	public void reloadRocks(int numRocks){
 		for(int i=0; i<numRocks; i++){
 			Rock newRock;
 			

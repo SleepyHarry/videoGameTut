@@ -1,9 +1,21 @@
 Bullet : class
 Polygon : superclass
 
-- length : double
+ATTRIBUTES
+- length : final static double
 / xpoints : int[2]
 / ypoints : int[2]
+- pos : Point
+- velocity : double[2]
 
+CONSTRUCTORS
++ Bullet(startPos : Point, velocity : double[])
+
+METHODS
 + checkHits(objs : GameObject[]) : GameObject[]
+- move() : void
++ tick() : void
 + draw(g2 : Graphics2d) : void
+
+GETTERS AND SETTERS
++ getVelocity() : double[2]
