@@ -213,23 +213,9 @@ public abstract class GameObject extends Polygon{
 		return this.checkCollisions(objs.toArray(new GameObject[objs.size()]));
 	}
 
-	public void handleKeyPress(){
-		//decides what to do when given input from keyboard keys pressed
-		//keysDown is currently only {w, a, s, d} bools
-		
-		//checks this.game.keysHeld
-		
-		//OVERRIDE THIS IN SUBCLASSES
-	}
+	public abstract void handleKeyPress();
 	
-	public void handleKeysHeld(){
-		//decides what to do when given input from keyboard keys held down
-		//keysDown is currently only {w, a, s, d} bools
-		
-		//checks this.game.keysDown
-		
-		//OVERRIDE THIS IN SUBCLASSES
-	}
+	public abstract void handleKeysHeld();
 	
 	public void tick(){
 		

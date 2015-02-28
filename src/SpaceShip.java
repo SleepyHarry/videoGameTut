@@ -63,9 +63,11 @@ public class SpaceShip extends GameObject{
 			//It's called a stack, but really we just iterate through it in order, then clear it
 			switch(k){
 			case KeyEvent.VK_BACK_QUOTE:
+			case KeyEvent.VK_ENTER:
 				this.setCollidable(!this.isCollidable());
 				break;
 			case KeyEvent.VK_SPACE:
+			case KeyEvent.VK_SHIFT:
 				this.fireBullet();
 				break;
 			}
@@ -81,21 +83,25 @@ public class SpaceShip extends GameObject{
 		for(int keyCode : this.game.keysDown){
 			switch(keyCode){
 			case KeyEvent.VK_W:
+			case KeyEvent.VK_UP:
 				this.addRelativeVelocity( this.acceleration,  0);
 				break;
 				
 			case KeyEvent.VK_A:
+			case KeyEvent.VK_LEFT:
 				this.setTheta(this.getTheta()-dTheta);
-	//			this.setOmega(this.getOmega()-dOmega);
+//				this.setOmega(-dTheta);
 				break;
 				
 			case KeyEvent.VK_S:
+			case KeyEvent.VK_DOWN:
 				this.addRelativeVelocity(-this.acceleration,  0);
 				break;
 				
 			case KeyEvent.VK_D:
-	//			this.setTheta(this.getTheta()+dTheta);
-				this.setOmega(dTheta);
+			case KeyEvent.VK_RIGHT:
+				this.setTheta(this.getTheta()+dTheta);
+//				this.setOmega(dTheta);
 				break;
 			}
 		}

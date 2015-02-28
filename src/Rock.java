@@ -57,4 +57,16 @@ public class Rock extends GameObject{
 		
 		return splits;
 	}
+
+	@Override
+	public void handleKeyPress() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleKeysHeld() {
+		// TODO Auto-generated method stub
+		
+	}
 }

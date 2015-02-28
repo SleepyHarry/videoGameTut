@@ -47,6 +47,8 @@ public class Lesson50 extends JFrame{
 				if(e.getKeyCode() == KeyEvent.VK_Q){
 //					panel.reloadPlayer();
 					panel.reloadRocks();
+				}else if(e.getKeyCode() == KeyEvent.VK_E || e.getKeyCode() == KeyEvent.VK_END){
+					panel.reloadRocks(1);
 				}
 			}
 
@@ -110,7 +112,7 @@ class GameBoard extends JComponent {
 		
 		this.reloadPlayer();
 		
-		this.reloadRocks();
+//		this.reloadRocks();
 	}
 	
 	public void reloadPlayer(){
