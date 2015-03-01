@@ -23,8 +23,8 @@ public abstract class GameObject extends Polygon{
 	
 	final double size;
 	
-	public static int[] arrBasePolyX;
-	public static int[] arrBasePolyY;
+//	public static int[] arrBasePolyX;
+//	public static int[] arrBasePolyY;
 	
 	Color color = Color.WHITE;
 	
@@ -213,14 +213,14 @@ public abstract class GameObject extends Polygon{
 		return this.checkCollisions(objs.toArray(new GameObject[objs.size()]));
 	}
 
-	public abstract void handleKeyPress();
-	
-	public abstract void handleKeysHeld();
+//	public abstract void handleKeyPress();
+//	
+//	public abstract void handleKeysHeld();
 	
 	public void tick(){
 		
-		this.handleKeyPress();
-		this.handleKeysHeld();
+//		this.handleKeyPress();
+//		this.handleKeysHeld();
 		
 		this.move();
 	}

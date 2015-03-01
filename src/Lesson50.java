@@ -236,21 +236,7 @@ class GameBoard extends JComponent {
 		
 		GameObject[] pCollisions = player.checkCollisions(rocks.toArray(new GameObject[rocks.size()]));
 		if(pCollisions.length > 0){
-//			player.setColor(Color.RED);
-			//player is kil
-			player.setAlive(false);
-			
-			int n = player.getExplosionFragments();
-			double deltaTheta = (Math.PI*2)/n;		//each bullet is evenly distributed
-			
-			Point startPos = player.getPos();
-			
-			double explosionForce = 4;				//should this be part of SpaceShip too?
-			
-			for(int i=0; i<n; i++){
-				double[] newVelocity = {Math.cos(deltaTheta*i)*explosionForce, Math.sin(deltaTheta*i)*explosionForce};
-				bullets.add(new Bullet(startPos, newVelocity));
-			}
+			player.die();
 		}else{
 			player.setColor(player.isCollidable()?Color.WHITE:Color.GREEN);
 		}

@@ -1,8 +1,8 @@
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-public class SpaceShip extends GameObject{
+public class SpaceShip extends GameObject implements Controllable{
 	
 	static int[] arrBasePolyX = {-14, 13, -14, -6};
 	static int[] arrBasePolyY = {-15, 0, 15, 0, -15};
@@ -14,10 +14,10 @@ public class SpaceShip extends GameObject{
 	
 //	ArrayList<Bullet> bullets;
 	
-	//TODO: Weapon class, which will have things like bulletSpeed set in it
-	double bulletSpeed = 10;
+	Weapon wep;
 	
-	private int explosionFragments = 50;		//How many bullets are generated when this ship explodes
+	private int explosionFragments = 50;		//How many Bullets are generated when this ship explodes
+	double explosionForce = 7;					//How fast the Bullets travel away from the dead ship
 	
 	public SpaceShip(int xLim, int yLim, double size, GameBoard game){//, Point[] arrPoly) {
 		
@@ -30,36 +30,27 @@ public class SpaceShip extends GameObject{
 		this.setCollidable(false);
 		
 //		this.bullets = new ArrayList<Bullet>();
+		
+		this.wep = new BulletWeapon(3, 10, Math.PI/72, this);
 	}
 	
-	private void fireBullet(){
-		//fires a bullet out of the nose of the ship
-//		//returns the fired Bullet for convenience
-		double[] bulletRelativeVelocity = {Math.cos(this.theta)*this.bulletSpeed, Math.sin(this.theta)*this.bulletSpeed};
-		double[] bulletAbsoluteVelocity = {bulletRelativeVelocity[0]+this.velocity[0], bulletRelativeVelocity[1]+this.velocity[1]};
-		
-		Bullet newBullet = new Bullet(this.getPos(), bulletAbsoluteVelocity);
-		newBullet.setCollidable(this.isCollidable());
-		newBullet.setColor(newBullet.isCollidable()?Color.WHITE:Color.GREEN);
-		
-		//TODO: Check all bullets for hits when we tick, remove any that do
-		this.game.bullets.add(newBullet);
-		
-		//return newBullet;
+	//Controllable's methods
+	@Override
+	public ArrayList<Integer> getKeyPressStack() {
+		return this.game.keyPressStack;
 	}
 	
-	public int getExplosionFragments() {
-		return explosionFragments;
-	}
-
-	public void setExplosionFragments(int explosionFragments) {
-		this.explosionFragments = explosionFragments;
+	@Override
+	public ArrayList<Integer> getKeysDown() {
+		return this.game.keysDown;
 	}
 
 	public void handleKeyPress(){
 		//decides what to do when given input from keyboard keys pressed
 		
-		for(int k : this.game.keyPressStack){
+		ArrayList<Integer> kp = this.getKeyPressStack();
+		
+		for(int k : kp){
 			//It's called a stack, but really we just iterate through it in order, then clear it
 			switch(k){
 			case KeyEvent.VK_BACK_QUOTE:
@@ -68,19 +59,21 @@ public class SpaceShip extends GameObject{
 				break;
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_SHIFT:
-				this.fireBullet();
+				this.wep.fire();
 				break;
 			}
 		}
 		
-		this.game.keyPressStack.clear();
+		kp.clear();
 	}
 	
 	public void handleKeysHeld(){
 		//decides what to do when given input from keyboard keys held down
 		
+		ArrayList<Integer> kd = this.getKeysDown();
+		
 		//movement keys
-		for(int keyCode : this.game.keysDown){
+		for(int keyCode : kd){
 			switch(keyCode){
 			case KeyEvent.VK_W:
 			case KeyEvent.VK_UP:
@@ -106,36 +99,30 @@ public class SpaceShip extends GameObject{
 			}
 		}
 	}
+	////
 	
-	public void draw(Graphics2D g2){
+	public void die() {
+		this.setAlive(false);
 		
-		super.draw(g2);
+		int n = this.explosionFragments;
+		double deltaTheta = (Math.PI*2)/n;		//each bullet is evenly distributed
 		
-//		for(Bullet bullet : this.game.bullets){
-//			bullet.tick();
-//			Point bPos = bullet.getPos();
-//			
-//			if(bPos.x <= 0 || this.limit.x <= bPos.x ||
-//			   bPos.y <= 0 || this.limit.y <= bPos.y){
-////				this.bullets.remove(bullet);
-//				bullet.setAlive(false);
-////				System.out.println("bullet is kil");
-//			}else if(bullet.isAlive()){
-//				bullet.draw(g2);
-//			}
-//			
-////			GameObject[] hits = bullet.checkHits();
-//		}
-//		
-//		//clean-up
-//		for(Object bullet : this.game.bullets.toArray()){
-//			if(!((Bullet)bullet).isAlive()){
-//				this.game.bullets.remove(((Bullet)bullet));
-//			}
-//		}
+		Point startPos = this.getPos();
+		
+		for(int i=0; i<n; i++){
+			double[] newVelocity = {Math.cos(deltaTheta*i)*this.explosionForce, Math.sin(deltaTheta*i)*this.explosionForce};
+			
+			Bullet fragment = new Bullet(startPos, newVelocity);
+			fragment.setCollidable(false);
+			
+			this.game.bullets.add(fragment);
+		}
 	}
 	
 	public void tick(){
+		
+		this.handleKeyPress();
+		this.handleKeysHeld();
 		
 		super.tick();
 		

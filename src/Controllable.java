@@ -1,6 +1,11 @@
+import java.util.ArrayList;
+
 
 public interface Controllable {
 	
-	public abstract void handleKeyPress();
-	public abstract void handleKeysHeld();
+	ArrayList<Integer> getKeysDown();
+	ArrayList<Integer> getKeyPressStack();
+	
+	void handleKeyPress();
+	void handleKeysHeld();
 }

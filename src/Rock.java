@@ -15,11 +15,6 @@ public class Rock extends GameObject{
 		super(arrBasePolyX, arrBasePolyY, size, game);
 		
 		Rectangle bBox = this.getBounds();
-//		System.out.println(bBox);
-//		if(bBox.isEmpty()){
-//			//TODO: something sensible here
-//			System.out.println("Rock too small");
-//		}
 		
 		this.setPos(
 				(int)(Math.random()*(limit.x-bBox.width*2)+bBox.width),
@@ -56,17 +51,5 @@ public class Rock extends GameObject{
 //		splits[1].setVelocity(this.getVelocity());
 		
 		return splits;
-	}
-
-	@Override
-	public void handleKeyPress() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void handleKeysHeld() {
-		// TODO Auto-generated method stub
-		
 	}
 }
