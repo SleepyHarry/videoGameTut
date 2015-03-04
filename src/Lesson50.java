@@ -138,7 +138,8 @@ class GameBoard extends JComponent {
 			Rock newRock;
 			
 			do{
-				newRock = new Rock(width, height, Math.random()+0.5, this);
+//				newRock = new Rock(width, height, Math.random()+0.5, this);
+				newRock = new Rock(width, height, Math.random()+1.5, this);
 			}while(newRock.checkCollisions(rocks.toArray(new GameObject[rocks.size()])).length > 0);	//make sure we haven't made a rock inside an existing one
 			
 			rocks.add(newRock);

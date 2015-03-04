@@ -212,10 +212,6 @@ public abstract class GameObject extends Polygon{
 		//overload to make calls to checkCollisions more readable
 		return this.checkCollisions(objs.toArray(new GameObject[objs.size()]));
 	}
-
-//	public abstract void handleKeyPress();
-//	
-//	public abstract void handleKeysHeld();
 	
 	public void tick(){
 		

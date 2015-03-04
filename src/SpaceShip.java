@@ -15,6 +15,8 @@ public class SpaceShip extends GameObject implements Controllable{
 //	ArrayList<Bullet> bullets;
 	
 	Weapon wep;
+	ArrayList<Weapon> weps;
+	int curWep = 0;
 	
 	private int explosionFragments = 50;		//How many Bullets are generated when this ship explodes
 	double explosionForce = 7;					//How fast the Bullets travel away from the dead ship
@@ -31,7 +33,12 @@ public class SpaceShip extends GameObject implements Controllable{
 		
 //		this.bullets = new ArrayList<Bullet>();
 		
-		this.wep = new BulletWeapon(3, 10, Math.PI/72, this);
+//		this.wep = new BulletWeapon(1, 10, Math.PI/72, this);
+		
+		this.weps = new ArrayList<Weapon>();
+		weps.add(0, new BulletWeapon(1, 10, Math.PI/72, false, 0, this));
+		weps.add(1, new BulletWeapon(3, 10, Math.PI/72, true, 60, this));
+		weps.add(2, new BulletWeapon(4, 10, Math.PI/2, true, 100, this));
 	}
 	
 	//Controllable's methods
@@ -59,7 +66,22 @@ public class SpaceShip extends GameObject implements Controllable{
 				break;
 			case KeyEvent.VK_SPACE:
 			case KeyEvent.VK_SHIFT:
-				this.wep.fire();
+//				this.wep.fire();
+				this.weps.get(this.curWep).fire();
+				break;
+			case KeyEvent.VK_1:
+			case KeyEvent.VK_2:
+			case KeyEvent.VK_3:
+			case KeyEvent.VK_4:
+			case KeyEvent.VK_5:
+			case KeyEvent.VK_6:
+			case KeyEvent.VK_7:
+			case KeyEvent.VK_8:
+			case KeyEvent.VK_9:
+				int choice = k - KeyEvent.VK_1;		//Do we like this? I think it may assume too much
+				if(choice < this.weps.size()){
+					this.curWep = choice;
+				}
 				break;
 			}
 		}

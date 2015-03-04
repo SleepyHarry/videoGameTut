@@ -5,40 +5,67 @@ import java.awt.Point;
 public class BulletWeapon extends Weapon {
 	//Weapon that fires bulletsPerShot Bullets out in an even spread in front of the firer
 	
-	double bulletSpeed;
-	int bulletsPerShot;
-	double spreadTheta;
+	protected int ammo;
+	protected boolean usesAmmo = false;
 	
-	public BulletWeapon(int bulletsPerShot, double bulletSpeed, double spreadTheta) {
+	protected double bulletSpeed;
+	protected int bulletsPerShot;
+	protected double spreadTheta;
+	
+	public BulletWeapon(int bulletsPerShot, double bulletSpeed, double spreadTheta, boolean usesAmmo, int initialAmmo) {
 		
 		this.bulletsPerShot = bulletsPerShot;
 		this.bulletSpeed = bulletSpeed;
 		this.spreadTheta = spreadTheta;
+		this.usesAmmo = usesAmmo;
+		this.ammo = initialAmmo;
 	}
-	
-	public BulletWeapon(int bulletsPerShot, double bulletSpeed, double spreadTheta, GameObject weilder){
+	public BulletWeapon(int bulletsPerShot, double bulletSpeed, double spreadTheta, boolean usesAmmo, int initialAmmo, GameObject weilder){
 		
-		this(bulletsPerShot, bulletSpeed, spreadTheta);
+		this(bulletsPerShot, bulletSpeed, spreadTheta, usesAmmo, initialAmmo);
 		
 		this.setWeilder(weilder);
 	}
 
+	public boolean usesAmmo() {
+		return usesAmmo;
+	}
+	
+	public void setUsesAmmo(boolean usesAmmo) {
+		this.usesAmmo = usesAmmo;
+	}
+	
+	public int getAmmo() {
+		return ammo;
+	}
+
+	public void setAmmo(int ammo) {
+		this.ammo = ammo;
+		
+		if(ammo > 0){
+			this.usesAmmo = true;
+		}
+	}
+
 	@Override
 	void fire() {
-//		System.out.println("fire");
-		GameObject weilder = this.getWeilder();
-		
-		if(!(weilder== null)){
-//			System.out.println("owned");
-			//Someone owns us
-			Point startPos = this.weilder.getPos();
-			double[] wVel = this.weilder.getVelocity();
-			double wTheta = this.weilder.getTheta();
+		if(!this.usesAmmo || (this.usesAmmo && this.ammo > 0)){
+			this.ammo--;
+	//		System.out.println("fire");
+			GameObject weilder = this.getWeilder();
 			
-			double initialTheta = wTheta - this.bulletsPerShot*this.spreadTheta/2;
-			
-			for(int i=0; i<this.bulletsPerShot; i++){
-				this.fireBullet(startPos, wVel, this.bulletSpeed, initialTheta + i*this.spreadTheta);
+			if(!(weilder== null)){
+	//			System.out.println("owned");
+				//Someone owns us
+				Point startPos = this.weilder.getPos();
+				double[] wVel = this.weilder.getVelocity();
+				double wTheta = this.weilder.getTheta();
+				
+				double initialTheta = wTheta - this.bulletsPerShot*this.spreadTheta/2;
+				
+				for(int i=0; i<this.bulletsPerShot; i++){
+					this.fireBullet(startPos, wVel, this.bulletSpeed, initialTheta + i*this.spreadTheta);
+				}
 			}
 		}
 	}
